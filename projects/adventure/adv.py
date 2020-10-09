@@ -29,6 +29,33 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+visited_rooms = {}
+rev = []
+opposite_direction = {'n': 's', 'e': 'w', 's': 'n', 'w': 'e'}
+
+
+visited_rooms[player.current_room.id] = player.current_room.get_exits()
+
+while len(visited_rooms) < len(room_graph):
+    if player.current_room.id not in visited_rooms:
+
+        visited_rooms[player.current_room.id] = player.current_room.get_exits()
+        prev = rev[-1]
+        visited_rooms[player.current_room.id].remove(prev)
+
+    if len(visited_rooms[player.current_room.id]) == 0:
+        prev = rev[-1]
+        rev.pop()
+        traversal_path.append(prev)
+        player.travel(prev)
+       
+    else:
+        direction = visited_rooms[player.current_room.id][-1]
+        visited_rooms[player.current_room.id].pop()
+        traversal_path.append(direction)
+   
+        rev.append(opposite_direction[direction])
+        player.travel(direction)
 
 
 # TRAVERSAL TEST
